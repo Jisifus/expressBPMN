@@ -1,0 +1,23 @@
+{
+  "name": "expressbpmn",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bpmnlint": "^8.1.1",
+    "busboy": "^1.6.0",
+    "connect-busboy": "^1.0.0",
+    "cors": "^2.8.5",
+    "ejs": "^3.1.8",
+    "express": "^4.18.2",
+    "express-fileupload": "^1.4.0",
+    "express-xml-bodyparser": "^0.3.0",
+    "formidable": "^2.0.1",
+    "nodemon": "^2.0.20"
+  }
+}
