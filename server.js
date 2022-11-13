@@ -1,18 +1,13 @@
 const express = require('express');
 const path = require('path');
-//const formidable = require('formidable');
 const fs = require('fs');
 const { exec } = require('child_process');
-//const xmlparser = require('express-xml-bodyparser');
 const cors = require('cors');
-//const busboy = require('connect-busboy');
 var fileupload = require("express-fileupload");
 const PORT = 3000;
 const app = express();
 
-//app.use(xmlparser());
 app.use(cors());
-//app.use(busboy());
 app.use(fileupload());
 app.set('view engine', 'ejs');
 
@@ -24,27 +19,35 @@ function open_index_page(req,res,next){
 }
 
 app.post('/fileupload', async (req, res) => {
-  try {
-    //const body = req.rawBody;
-    //await fs.writeFile('diagram2.bpmn', body, 'utf8');
 
-    if(!req.files)
-    {
-        res.send("File was not found");
-        return;
-    }
-    let file = req.files.filefield;
-    file.mv('./uploads/' + file.name);
-
-
-    exec('bpmnlint uploads/'+file.name, (err, stdout, stderr) => {
-        console.log(stdout);
-        res.send(JSON.stringify(stdout));
-      });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send(JSON.stringify(error));
+  if (!req.files) {
+    return res.status(400).send('No files were uploaded.');
   }
+
+  let file = req.files.file;
+
+  file.mv('uploads/' + file.name, function(err) {
+    if (err) {
+      return res.status(500).send(err);
+    }
+    // res.send('File uploaded!');
+  }
+  );
+  
+  exec("bpmnlint uploads/" + file.name, (stderr, stdout) => {
+  // if (!err) {
+  //   // node couldn't execute the command
+  //   console.log(stdout);
+  //   return;
+  // }
+
+  // the *entire* stdout and stderr (buffered)
+  console.log(`stdout: ${stdout}`);
+  console.log(`stderr: ${stderr}`);
+
+  // Send the output to the browser
+  res.send(stdout);
+  });
 });
 
 app.listen(PORT, () => {
