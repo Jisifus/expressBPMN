@@ -20,12 +20,15 @@ function open_index_page(req,res,next){
 
 app.post('/fileupload', async (req, res) => {
 
+  // check if request includes file
   if (!req.files) {
     return res.status(400).send('No files were uploaded.');
   }
 
+  // assign file to variable
   let file = req.files.file;
 
+  // move file to upload folder and return error if failed
   file.mv('uploads/' + file.name, function(err) {
     if (err) {
       return res.status(500).send(err);
@@ -34,14 +37,10 @@ app.post('/fileupload', async (req, res) => {
   }
   );
   
+  // run bpmnlint
   exec("bpmnlint uploads/" + file.name, (stderr, stdout) => {
-  // if (!err) {
-  //   // node couldn't execute the command
-  //   console.log(stdout);
-  //   return;
-  // }
 
-  // the *entire* stdout and stderr (buffered)
+  // the *entire* stdout and stderr 
   console.log(`stdout: ${stdout}`);
   console.log(`stderr: ${stderr}`);
 
